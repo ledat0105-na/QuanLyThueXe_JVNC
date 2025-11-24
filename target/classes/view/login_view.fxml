@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.org.controller.LoginController"
+      spacing="10"
+      alignment="CENTER"
+      stylesheets="@styles.css">
+  <padding>
+    <Insets top="30" right="30" bottom="30" left="30"/>
+  </padding>
+
+  <Label text="FU Car Renting System" styleClass="title-label"/>
+  <TextField fx:id="usernameField" promptText="Tên đăng nhập" maxWidth="250"/>
+  <PasswordField fx:id="passwordField" promptText="Mật khẩu" maxWidth="250"/>
+  <Button fx:id="loginButton" text="Đăng nhập" onAction="#handleLogin" maxWidth="250"/>
+  <Hyperlink text="Chưa có tài khoản? Đăng ký" onAction="#openRegister"/>
+</VBox>
+

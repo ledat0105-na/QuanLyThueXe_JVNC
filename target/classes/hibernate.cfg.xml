@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!-- Database connection -->
+    <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/FUCarRentingSystemDB</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">dat1234</property>
+
+    <!-- Dialect -->
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+    <!-- Schema handling -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+
+    <mapping class="com.org.entity.Account"/>
+    <mapping class="com.org.entity.CarProducer"/>
+    <mapping class="com.org.entity.Car"/>
+    <mapping class="com.org.entity.Customer"/>
+    <mapping class="com.org.entity.CarRental"/>
+    <mapping class="com.org.entity.Review"/>
+  </session-factory>
+</hibernate-configuration>
