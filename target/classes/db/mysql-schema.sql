@@ -94,9 +94,42 @@ INSERT INTO Account (AccountID, AccountName, Password, Role) VALUES
 (5, 'emily.vo', 'password123', 'Customer');
 
 INSERT INTO Customer (CustomerID, CustomerName, Mobile, Birthday, IdentityCard, Email, Password, AccountID) VALUES
-(1, 'Alice Nguyen', '0901234567', '1994-05-12', '012345678901', 'alice.nguyen@example.com', 'password123', 1),
-(2, 'Bao Tran', '0912345678', '1992-11-23', '023456789012', 'bao.tran@example.com', 'password123', 2),
-(3, 'Chi Le', '0923456789', '1990-02-15', '034567890123', 'chi.le@example.com', 'password123', 3),
-(4, 'Duy Pham', '0934567890', '1988-07-30', '045678901234', 'duy.pham@example.com', 'password123', 4),
-(5, 'Emily Vo', '0945678901', '1996-09-05', '056789012345', 'emily.vo@example.com', 'password123', 5);
+(1, 'Alice Nguyen', '0901234567', STR_TO_DATE('12-05-1994', '%d-%m-%Y'), '012345678901', 'alice.nguyen@example.com', 'password123', 1),
+(2, 'Bao Tran', '0912345678', STR_TO_DATE('23-11-1992', '%d-%m-%Y'), '023456789012', 'bao.tran@example.com', 'password123', 2),
+(3, 'Chi Le', '0923456789', STR_TO_DATE('15-02-1990', '%d-%m-%Y'), '034567890123', 'chi.le@example.com', 'password123', 3),
+(4, 'Duy Pham', '0934567890', STR_TO_DATE('30-07-1988', '%d-%m-%Y'), '045678901234', 'duy.pham@example.com', 'password123', 4),
+(5, 'Emily Vo', '0945678901', STR_TO_DATE('05-09-1996', '%d-%m-%Y'), '056789012345', 'emily.vo@example.com', 'password123', 5);
+
+INSERT INTO Account (AccountID, AccountName, Password, Role) VALUES
+(6, 'admin', 'admin123', 'Admin');
+
+INSERT INTO CarProducer (ProducerID, ProducerName, Address, Country) VALUES
+(1, 'Toyota Vietnam', '123 Le Van Viet, Thu Duc, Ho Chi Minh City', 'Vietnam'),
+(2, 'Honda Vietnam', '456 Nguyen Van Linh, District 7, Ho Chi Minh City', 'Vietnam'),
+(3, 'Ford Vietnam', '789 Vo Van Tan, District 3, Ho Chi Minh City', 'Vietnam'),
+(4, 'Mercedes-Benz Vietnam', '321 Dong Khoi, District 1, Ho Chi Minh City', 'Vietnam');
+
+INSERT INTO Car (CarID, CarName, CarModelYear, Color, Capacity, Description, ImportDate, ProducerID, RentPrice, Status) VALUES
+(1, 'Toyota Camry 2023', 2023, 'Xanh dương', 5, 'Xe sedan cao cấp, tiết kiệm nhiên liệu', STR_TO_DATE('15-01-2023', '%d-%m-%Y'), 1, 2500000.00, 'Available'),
+(2, 'Honda Civic 2022', 2022, 'Trắng', 5, 'Xe sedan thể thao, động cơ mạnh mẽ', STR_TO_DATE('20-03-2022', '%d-%m-%Y'), 2, 2200000.00, 'Available'),
+(3, 'Ford Ranger 2023', 2023, 'Đen', 5, 'Xe bán tải, phù hợp đường địa hình', STR_TO_DATE('10-05-2023', '%d-%m-%Y'), 3, 3000000.00, 'Rented'),
+(4, 'Mercedes-Benz C200 2023', 2023, 'Bạc', 5, 'Xe sang trọng, đầy đủ tính năng', STR_TO_DATE('25-02-2023', '%d-%m-%Y'), 4, 5000000.00, 'Available'),
+(5, 'Toyota Vios 2022', 2022, 'Đỏ', 5, 'Xe sedan phổ biến, giá hợp lý', STR_TO_DATE('18-06-2022', '%d-%m-%Y'), 1, 1500000.00, 'Available'),
+(6, 'Honda CR-V 2023', 2023, 'Xám', 7, 'SUV 7 chỗ, không gian rộng rãi', STR_TO_DATE('12-04-2023', '%d-%m-%Y'), 2, 3500000.00, 'Maintenance'),
+(7, 'Ford Explorer 2022', 2022, 'Xanh lá', 7, 'SUV lớn, phù hợp gia đình', STR_TO_DATE('08-08-2022', '%d-%m-%Y'), 3, 4000000.00, 'Available');
+
+INSERT INTO CarRental (CustomerID, CarID, PickupDate, ReturnDate, RentPrice, Status) VALUES
+(1, 1, STR_TO_DATE('01-11-2024', '%d-%m-%Y'), STR_TO_DATE('05-11-2024', '%d-%m-%Y'), 10000000.00, 'Đã hoàn thành'),
+(2, 2, STR_TO_DATE('10-11-2024', '%d-%m-%Y'), STR_TO_DATE('15-11-2024', '%d-%m-%Y'), 11000000.00, 'Đã hoàn thành'),
+(1, 4, STR_TO_DATE('20-11-2024', '%d-%m-%Y'), STR_TO_DATE('25-11-2024', '%d-%m-%Y'), 25000000.00, 'Đang thuê'),
+(3, 2, STR_TO_DATE('15-12-2024', '%d-%m-%Y'), STR_TO_DATE('20-12-2024', '%d-%m-%Y'), 11000000.00, 'Đang thuê'),
+(3, 5, STR_TO_DATE('05-10-2024', '%d-%m-%Y'), STR_TO_DATE('10-10-2024', '%d-%m-%Y'), 7500000.00, 'Đã hoàn thành'),
+(4, 7, STR_TO_DATE('01-09-2024', '%d-%m-%Y'), STR_TO_DATE('07-09-2024', '%d-%m-%Y'), 24000000.00, 'Đã hoàn thành'),
+(5, 1, STR_TO_DATE('25-11-2024', '%d-%m-%Y'), STR_TO_DATE('30-11-2024', '%d-%m-%Y'), 12500000.00, 'Đã hủy');
+
+INSERT INTO Review (CustomerID, CarID, ReviewStar, Comment) VALUES
+(1, 1, 5, 'Xe rất đẹp và tiết kiệm nhiên liệu. Nhân viên phục vụ tận tình. Sẽ thuê lại lần sau!'),
+(2, 2, 4, 'Xe động cơ mạnh, lái rất êm. Chỉ có điều giá hơi cao một chút.'),
+(3, 5, 5, 'Xe phù hợp với nhu cầu của tôi. Giá cả hợp lý và dịch vụ tốt.'),
+(4, 7, 4, 'Xe rộng rãi, phù hợp cho gia đình. Chất lượng tốt nhưng giá hơi cao.');
 

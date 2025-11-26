@@ -1,22 +1,16 @@
-package com.org.repository.impl;
-
+﻿package com.org.repository.impl;
 import com.org.config.HibernateUtil;
 import com.org.entity.Account;
 import com.org.repository.AccountRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import java.util.Optional;
-
 public class HibernateAccountRepository implements AccountRepository {
-
   private final SessionFactory sessionFactory;
-
   public HibernateAccountRepository() {
     this.sessionFactory = HibernateUtil.getSessionFactory();
   }
-
   @Override
   public Optional<Account> findByAccountName(String accountName) {
     try (Session session = sessionFactory.openSession()) {
@@ -25,7 +19,6 @@ public class HibernateAccountRepository implements AccountRepository {
           .uniqueResultOptional();
     }
   }
-
   @Override
   public Account save(Account account) {
     Transaction transaction = null;
@@ -42,4 +35,3 @@ public class HibernateAccountRepository implements AccountRepository {
     }
   }
 }
-

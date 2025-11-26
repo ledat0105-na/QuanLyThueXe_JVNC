@@ -1,5 +1,4 @@
-package com.org.controller;
-
+﻿package com.org.controller;
 import com.org.service.AuthService;
 import com.org.service.dto.RegistrationRequest;
 import com.org.ui.SceneNavigator;
@@ -10,42 +9,29 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
 public class RegisterController {
-
   @FXML
   private TextField usernameField;
-
   @FXML
   private TextField fullNameField;
-
   @FXML
   private TextField mobileField;
-
   @FXML
   private DatePicker birthdayPicker;
-
   @FXML
   private TextField identityCardField;
-
   @FXML
   private TextField emailField;
-
   @FXML
   private PasswordField passwordField;
-
   @FXML
   private PasswordField confirmPasswordField;
-
   @FXML
   private Button registerButton;
-
   private final AuthService authService;
-
   public RegisterController(AuthService authService) {
     this.authService = authService;
   }
-
   @FXML
   void initialize() {
     registerButton.disableProperty().bind(
@@ -58,7 +44,6 @@ public class RegisterController {
             .or(confirmPasswordField.textProperty().isEmpty())
             .or(birthdayPicker.valueProperty().isNull()));
   }
-
   @FXML
   void handleRegister(ActionEvent event) {
     if (!passwordField.getText().equals(confirmPasswordField.getText())) {
@@ -86,12 +71,10 @@ public class RegisterController {
       showAlert(Alert.AlertType.ERROR, ex.getMessage());
     }
   }
-
   @FXML
   void goBack(ActionEvent event) {
     SceneNavigator.showLogin();
   }
-
   private void showAlert(Alert.AlertType type, String message) {
     Alert alert = new Alert(type);
     alert.setHeaderText(null);
@@ -99,4 +82,3 @@ public class RegisterController {
     alert.showAndWait();
   }
 }
-

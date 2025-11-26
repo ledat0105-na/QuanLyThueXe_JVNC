@@ -1,23 +1,17 @@
-package com.org.repository.impl;
-
+﻿package com.org.repository.impl;
 import com.org.config.HibernateUtil;
 import com.org.entity.CarProducer;
 import com.org.repository.CarProducerRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import java.util.List;
 import java.util.Optional;
-
 public class HibernateCarProducerRepository implements CarProducerRepository {
-
   private final SessionFactory sessionFactory;
-
   public HibernateCarProducerRepository() {
     this.sessionFactory = HibernateUtil.getSessionFactory();
   }
-
   @Override
   public CarProducer save(CarProducer producer) {
     Transaction transaction = null;
@@ -33,14 +27,12 @@ public class HibernateCarProducerRepository implements CarProducerRepository {
       throw e;
     }
   }
-
   @Override
   public Optional<CarProducer> findById(Long id) {
     try (Session session = sessionFactory.openSession()) {
       return Optional.ofNullable(session.get(CarProducer.class, id));
     }
   }
-
   @Override
   public List<CarProducer> findAll() {
     try (Session session = sessionFactory.openSession()) {
@@ -48,7 +40,6 @@ public class HibernateCarProducerRepository implements CarProducerRepository {
           .getResultList();
     }
   }
-
   @Override
   public void delete(CarProducer producer) {
     Transaction transaction = null;
@@ -63,7 +54,6 @@ public class HibernateCarProducerRepository implements CarProducerRepository {
       throw e;
     }
   }
-
   @Override
   public boolean hasCars(Long producerId) {
     try (Session session = sessionFactory.openSession()) {
@@ -75,4 +65,3 @@ public class HibernateCarProducerRepository implements CarProducerRepository {
     }
   }
 }
-

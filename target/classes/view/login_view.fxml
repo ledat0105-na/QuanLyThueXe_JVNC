@@ -6,17 +6,24 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.org.controller.LoginController"
-      spacing="10"
+      spacing="0"
       alignment="CENTER"
+      fillWidth="true"
       stylesheets="@styles.css">
   <padding>
-    <Insets top="30" right="30" bottom="30" left="30"/>
+    <Insets top="30" right="50" bottom="30" left="50"/>
   </padding>
 
-  <Label text="FU Car Renting System" styleClass="title-label"/>
-  <TextField fx:id="usernameField" promptText="Tên đăng nhập" maxWidth="250"/>
-  <PasswordField fx:id="passwordField" promptText="Mật khẩu" maxWidth="250"/>
-  <Button fx:id="loginButton" text="Đăng nhập" onAction="#handleLogin" maxWidth="250"/>
-  <Hyperlink text="Chưa có tài khoản? Đăng ký" onAction="#openRegister"/>
+  <!-- Container chính để căn giữa và giới hạn chiều rộng -->
+  <VBox spacing="20" alignment="CENTER" maxWidth="400" VBox.vgrow="ALWAYS" styleClass="main-container">
+    <Label text="Ứng Dụng Cho Thuê Xe" styleClass="title-label"/>
+    
+    <VBox spacing="15" alignment="CENTER">
+      <TextField fx:id="usernameField" promptText="Tên đăng nhập" prefWidth="300" minWidth="250"/>
+      <PasswordField fx:id="passwordField" promptText="Mật khẩu" prefWidth="300" minWidth="250"/>
+      <Button fx:id="loginButton" text="Đăng nhập" onAction="#handleLogin" prefWidth="300" minWidth="250"/>
+      <Hyperlink text="Chưa có tài khoản? Đăng ký" onAction="#openRegister"/>
+    </VBox>
+  </VBox>
 </VBox>
 
