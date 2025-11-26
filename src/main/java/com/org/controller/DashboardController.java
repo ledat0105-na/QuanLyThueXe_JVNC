@@ -61,6 +61,12 @@ public class DashboardController {
   @FXML
   private Button logoutButton;
 
+  @FXML
+  private Button manageCustomersButton;
+
+  @FXML
+  private Button manageCarsButton;
+
   private final Account account;
   private final CustomerService customerService;
   private final CarRentalService carRentalService;
@@ -418,6 +424,16 @@ public class DashboardController {
       } else {
         setText(item.getCar().getCarName() + " (" + item.getPickupDate() + ")");
       }
+    // Chỉ hiển thị các nút quản lý cho Admin
+    boolean isAdmin = "Admin".equalsIgnoreCase(account.getRole());
+    manageCustomersButton.setVisible(isAdmin);
+    manageCustomersButton.setManaged(isAdmin);
+    manageCarsButton.setVisible(isAdmin);
+    manageCarsButton.setManaged(isAdmin);
+    
+    if (isAdmin) {
+      manageCustomersButton.setOnAction(event -> SceneNavigator.showCustomerManagement(account));
+      manageCarsButton.setOnAction(event -> SceneNavigator.showCarManagement(account));
     }
   }
 }
