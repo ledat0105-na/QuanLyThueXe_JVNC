@@ -17,6 +17,12 @@ public class DashboardController {
   @FXML
   private Button logoutButton;
 
+  @FXML
+  private Button manageCustomersButton;
+
+  @FXML
+  private Button manageCarsButton;
+
   private final Account account;
 
   public DashboardController(Account account) {
@@ -28,6 +34,18 @@ public class DashboardController {
     welcomeLabel.setText("Xin chào, " + account.getAccountName());
     roleLabel.setText("Quyền hạn: " + account.getRole());
     logoutButton.setOnAction(event -> SceneNavigator.showLogin());
+
+    // Chỉ hiển thị các nút quản lý cho Admin
+    boolean isAdmin = "Admin".equalsIgnoreCase(account.getRole());
+    manageCustomersButton.setVisible(isAdmin);
+    manageCustomersButton.setManaged(isAdmin);
+    manageCarsButton.setVisible(isAdmin);
+    manageCarsButton.setManaged(isAdmin);
+    
+    if (isAdmin) {
+      manageCustomersButton.setOnAction(event -> SceneNavigator.showCustomerManagement(account));
+      manageCarsButton.setOnAction(event -> SceneNavigator.showCarManagement(account));
+    }
   }
 }
 

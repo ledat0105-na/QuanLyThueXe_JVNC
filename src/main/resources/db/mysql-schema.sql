@@ -85,3 +85,18 @@ CREATE TABLE Review (
   CONSTRAINT ck_review_star CHECK (ReviewStar BETWEEN 1 AND 5)
 );
 
+-- Sample data for Account & Customer
+INSERT INTO Account (AccountID, AccountName, Password, Role) VALUES
+(1, 'alice.nguyen', 'password123', 'Customer'),
+(2, 'bao.tran', 'password123', 'Customer'),
+(3, 'chi.le', 'password123', 'Customer'),
+(4, 'duy.pham', 'password123', 'Customer'),
+(5, 'emily.vo', 'password123', 'Customer');
+
+INSERT INTO Customer (CustomerID, CustomerName, Mobile, Birthday, IdentityCard, Email, Password, AccountID) VALUES
+(1, 'Alice Nguyen', '0901234567', '1994-05-12', '012345678901', 'alice.nguyen@example.com', 'password123', 1),
+(2, 'Bao Tran', '0912345678', '1992-11-23', '023456789012', 'bao.tran@example.com', 'password123', 2),
+(3, 'Chi Le', '0923456789', '1990-02-15', '034567890123', 'chi.le@example.com', 'password123', 3),
+(4, 'Duy Pham', '0934567890', '1988-07-30', '045678901234', 'duy.pham@example.com', 'password123', 4),
+(5, 'Emily Vo', '0945678901', '1996-09-05', '056789012345', 'emily.vo@example.com', 'password123', 5);
+

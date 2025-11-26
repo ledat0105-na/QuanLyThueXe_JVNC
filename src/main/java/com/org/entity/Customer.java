@@ -33,7 +33,7 @@ public class Customer implements Serializable {
   @Column(name = "Password", nullable = false, length = 255)
   private String password;
 
-  @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
   @JoinColumn(name = "AccountID", nullable = false)
   private Account account;
 
