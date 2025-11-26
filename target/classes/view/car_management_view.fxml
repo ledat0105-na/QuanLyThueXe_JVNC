@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.org.controller.CarManagementController"
+      spacing="0"
+      alignment="CENTER"
+      fillWidth="true"
+      stylesheets="@styles.css">
+  <padding>
+    <Insets top="30" right="50" bottom="30" left="50"/>
+  </padding>
+
+  <!-- Container chính để căn giữa và giới hạn chiều rộng -->
+  <VBox spacing="20" alignment="CENTER" maxWidth="1400" VBox.vgrow="ALWAYS" styleClass="main-container">
+    <!-- Header -->
+    <HBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS">
+      <Label text="Quản lý xe ô tô" styleClass="title-label"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <Button fx:id="backButton" text="← Quay lại" onAction="#handleBack"/>
+    </HBox>
+
+    <!-- Button Panel -->
+    <HBox spacing="15" alignment="CENTER" styleClass="button-panel">
+      <Button fx:id="addButton" text="➕ Thêm mới" onAction="#handleAdd" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+      <Button fx:id="editButton" text="✏️ Chỉnh sửa" onAction="#handleEdit" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+      <Button fx:id="changeStatusButton" text="🔄 Đổi trạng thái" onAction="#handleChangeStatus" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+      <Button fx:id="deleteButton" text="🗑️ Xóa" onAction="#handleDelete" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+      <Button fx:id="manageProducerButton" text="🏭 Quản lý NSX" onAction="#handleManageProducer" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+    </HBox>
+
+    <!-- Table Container -->
+    <VBox spacing="0" VBox.vgrow="ALWAYS" alignment="CENTER" styleClass="table-container">
+      <TableView fx:id="carTable" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="idColumn" text="ID" prefWidth="60" minWidth="50"/>
+          <TableColumn fx:id="nameColumn" text="Tên xe" prefWidth="200" minWidth="150"/>
+          <TableColumn fx:id="yearColumn" text="Năm SX" prefWidth="80" minWidth="70"/>
+          <TableColumn fx:id="colorColumn" text="Màu sắc" prefWidth="100" minWidth="80"/>
+          <TableColumn fx:id="producerColumn" text="Nhà sản xuất" prefWidth="180" minWidth="150"/>
+          <TableColumn fx:id="priceColumn" text="Giá thuê (VND)" prefWidth="150" minWidth="120"/>
+          <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120" minWidth="100"/>
+        </columns>
+        <columnResizePolicy>
+          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+      </TableView>
+    </VBox>
+  </VBox>
+</VBox>
+

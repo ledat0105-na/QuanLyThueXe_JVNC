@@ -45,6 +45,24 @@ public final class SceneNavigator {
     setScene(loader);
   }
 
+  public static void showCustomerManagement(Account account) {
+    FXMLLoader loader = createLoader("/view/customer_management_view.fxml",
+        () -> new com.org.controller.CustomerManagementController(account));
+    setScene(loader);
+  }
+
+  public static void showCarManagement(Account account) {
+    FXMLLoader loader = createLoader("/view/car_management_view.fxml",
+        () -> new com.org.controller.CarManagementController(account));
+    setScene(loader);
+  }
+
+  public static void showCarProducerManagement(Account account) {
+    FXMLLoader loader = createLoader("/view/car_producer_management_view.fxml",
+        () -> new com.org.controller.CarProducerManagementController(account));
+    setScene(loader);
+  }
+
   private static void loadScene(String resource, Supplier<Object> controllerSupplier) {
     FXMLLoader loader = createLoader(resource, controllerSupplier);
     setScene(loader);
