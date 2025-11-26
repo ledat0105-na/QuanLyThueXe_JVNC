@@ -1,23 +1,17 @@
-package com.org.repository.impl;
-
+﻿package com.org.repository.impl;
 import com.org.config.HibernateUtil;
 import com.org.entity.Car;
 import com.org.repository.CarRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import java.util.List;
 import java.util.Optional;
-
 public class HibernateCarRepository implements CarRepository {
-
   private final SessionFactory sessionFactory;
-
   public HibernateCarRepository() {
     this.sessionFactory = HibernateUtil.getSessionFactory();
   }
-
   @Override
   public Car save(Car car) {
     Transaction transaction = null;
@@ -33,7 +27,6 @@ public class HibernateCarRepository implements CarRepository {
       throw e;
     }
   }
-
   @Override
   public Optional<Car> findById(Long id) {
     try (Session session = sessionFactory.openSession()) {
@@ -44,7 +37,6 @@ public class HibernateCarRepository implements CarRepository {
       return Optional.ofNullable(car);
     }
   }
-
   @Override
   public List<Car> findAll() {
     try (Session session = sessionFactory.openSession()) {
@@ -53,7 +45,6 @@ public class HibernateCarRepository implements CarRepository {
           .getResultList();
     }
   }
-
   @Override
   public void delete(Car car) {
     Transaction transaction = null;
@@ -68,7 +59,6 @@ public class HibernateCarRepository implements CarRepository {
       throw e;
     }
   }
-
   @Override
   public boolean hasRentals(Long carId) {
     try (Session session = sessionFactory.openSession()) {
@@ -80,4 +70,3 @@ public class HibernateCarRepository implements CarRepository {
     }
   }
 }
-

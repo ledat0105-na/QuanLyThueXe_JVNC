@@ -1,5 +1,4 @@
-package com.org.controller;
-
+﻿package com.org.controller;
 import com.org.ServiceLocator;
 import com.org.entity.Account;
 import com.org.entity.Customer;
@@ -11,69 +10,51 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.util.Optional;
-
 public class CustomerManagementController {
-
   @FXML
   private TableView<Customer> customerTable;
-
   @FXML
   private TableColumn<Customer, Long> idColumn;
-
   @FXML
   private TableColumn<Customer, String> nameColumn;
-
   @FXML
   private TableColumn<Customer, String> mobileColumn;
-
   @FXML
   private TableColumn<Customer, String> emailColumn;
-
   @FXML
   private TableColumn<Customer, String> identityCardColumn;
-
   @FXML
   private Button addButton;
-
   @FXML
   private Button editButton;
-
   @FXML
   private Button deleteButton;
-
   @FXML
   private Button backButton;
-
   private final CustomerService customerService;
   private final Account currentAccount;
   private final ObservableList<Customer> customerList;
-
   public CustomerManagementController(Account account) {
     this.currentAccount = account;
     this.customerService = ServiceLocator.getCustomerService();
     this.customerList = FXCollections.observableArrayList();
   }
-
   @FXML
   void initialize() {
     setupTable();
     loadCustomers();
     setupButtons();
   }
-
   private void setupTable() {
     idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
     nameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
     mobileColumn.setCellValueFactory(new PropertyValueFactory<>("mobile"));
     emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
     identityCardColumn.setCellValueFactory(new PropertyValueFactory<>("identityCard"));
-
     customerTable.setItems(customerList);
     customerTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
   }
-
   private void loadCustomers() {
     try {
       customerList.clear();
@@ -82,19 +63,16 @@ public class CustomerManagementController {
       showError("Lỗi", "Không thể tải danh sách khách hàng: " + e.getMessage());
     }
   }
-
   private void setupButtons() {
     editButton.disableProperty().bind(
         customerTable.getSelectionModel().selectedItemProperty().isNull());
     deleteButton.disableProperty().bind(
         customerTable.getSelectionModel().selectedItemProperty().isNull());
   }
-
   @FXML
   void handleAdd(ActionEvent event) {
     showCustomerDialog(null);
   }
-
   @FXML
   void handleEdit(ActionEvent event) {
     Customer selected = customerTable.getSelectionModel().getSelectedItem();
@@ -102,7 +80,6 @@ public class CustomerManagementController {
       showCustomerDialog(selected);
     }
   }
-
   @FXML
   void handleDelete(ActionEvent event) {
     Customer selected = customerTable.getSelectionModel().getSelectedItem();
@@ -111,7 +88,6 @@ public class CustomerManagementController {
       confirmAlert.setTitle("Xác nhận xóa");
       confirmAlert.setHeaderText("Xóa khách hàng");
       confirmAlert.setContentText("Bạn có chắc chắn muốn xóa khách hàng: " + selected.getCustomerName() + "?");
-      
       Optional<ButtonType> result = confirmAlert.showAndWait();
       if (result.isPresent() && result.get() == ButtonType.OK) {
         try {
@@ -124,21 +100,16 @@ public class CustomerManagementController {
       }
     }
   }
-
   @FXML
   void handleBack(ActionEvent event) {
     SceneNavigator.showDashboard(currentAccount);
   }
-
   private void showCustomerDialog(Customer customer) {
     Dialog<Customer> dialog = new Dialog<>();
     dialog.setTitle(customer == null ? "Thêm khách hàng mới" : "Chỉnh sửa khách hàng");
     dialog.setHeaderText(customer == null ? "Nhập thông tin khách hàng mới" : "Cập nhật thông tin khách hàng");
-
     ButtonType saveButtonType = new ButtonType("Lưu", ButtonBar.ButtonData.OK_DONE);
     dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-    // Form fields
     TextField nameField = new TextField();
     nameField.setPromptText("Tên khách hàng");
     TextField mobileField = new TextField();
@@ -151,7 +122,6 @@ public class CustomerManagementController {
     emailField.setPromptText("Email");
     PasswordField passwordField = new PasswordField();
     passwordField.setPromptText("Mật khẩu");
-
     if (customer != null) {
       nameField.setText(customer.getCustomerName());
       mobileField.setText(customer.getMobile());
@@ -161,13 +131,10 @@ public class CustomerManagementController {
       passwordField.setDisable(true);
       passwordField.setVisible(false);
     }
-
-    // Layout
     javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
     grid.setHgap(10);
     grid.setVgap(10);
     grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
-
     grid.add(new Label("Tên khách hàng:"), 0, 0);
     grid.add(nameField, 1, 0);
     grid.add(new Label("Số điện thoại:"), 0, 1);
@@ -182,10 +149,7 @@ public class CustomerManagementController {
       grid.add(new Label("Mật khẩu:"), 0, 5);
       grid.add(passwordField, 1, 5);
     }
-
     dialog.getDialogPane().setContent(grid);
-
-    // Enable/Disable save button
     Button saveButton = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
     if (customer == null) {
       saveButton.disableProperty().bind(
@@ -203,7 +167,6 @@ public class CustomerManagementController {
               .or(identityCardField.textProperty().isEmpty())
               .or(emailField.textProperty().isEmpty()));
     }
-
     dialog.setResultConverter(dialogButton -> {
       if (dialogButton == saveButtonType) {
         try {
@@ -237,13 +200,11 @@ public class CustomerManagementController {
       }
       return null;
     });
-
     Optional<Customer> result = dialog.showAndWait();
     if (result.isPresent()) {
       loadCustomers();
     }
   }
-
   private void showError(String title, String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
@@ -251,7 +212,6 @@ public class CustomerManagementController {
     alert.setContentText(message);
     alert.showAndWait();
   }
-
   private void showSuccess(String title, String message) {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle(title);
@@ -260,4 +220,3 @@ public class CustomerManagementController {
     alert.showAndWait();
   }
 }
-

@@ -6,17 +6,31 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.org.controller.DashboardController"
-      spacing="15"
+      spacing="0"
       alignment="CENTER"
+      fillWidth="true"
       stylesheets="@styles.css">
   <padding>
-    <Insets top="20" right="30" bottom="20" left="30"/>
+    <Insets top="30" right="50" bottom="30" left="50"/>
   </padding>
 
-  <Label fx:id="welcomeLabel" styleClass="title-label"/>
-  <Label fx:id="roleLabel"/>
-  <Button fx:id="manageCustomersButton" text="Quản lý khách hàng"/>
-  <Button fx:id="manageCarsButton" text="Quản lý xe ô tô"/>
-  <Button fx:id="logoutButton" text="Đăng xuất"/>
+  <VBox spacing="20" alignment="CENTER" maxWidth="1200" VBox.vgrow="ALWAYS" styleClass="main-container">
+    <HBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS">
+      <Label fx:id="welcomeLabel" styleClass="title-label" HBox.hgrow="ALWAYS"/>
+      <Label fx:id="roleLabel"/>
+    </HBox>
+    
+    <VBox fx:id="adminButtonsPanel" spacing="15" alignment="CENTER">
+      <Button fx:id="manageCustomersButton" text="Quản lý khách hàng" prefWidth="300" minWidth="250"/>
+      <Button fx:id="manageCarsButton" text="Quản lý xe ô tô" prefWidth="300" minWidth="250"/>
+      <Button fx:id="manageRentalsButton" text="Quản lý giao dịch thuê xe" prefWidth="300" minWidth="250"/>
+    </VBox>
+    
+    <HBox fx:id="adminLogoutContainer" alignment="CENTER" HBox.hgrow="ALWAYS">
+      <Button fx:id="logoutButton" text="Đăng xuất" prefWidth="150" minWidth="100" styleClass="logout-button"/>
+    </HBox>
+    
+    <VBox fx:id="customerTabsContainer" VBox.vgrow="ALWAYS"/>
+  </VBox>
 </VBox>
 

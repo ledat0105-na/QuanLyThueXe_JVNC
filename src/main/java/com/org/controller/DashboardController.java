@@ -1,5 +1,4 @@
-package com.org.controller;
-
+﻿package com.org.controller;
 import com.org.entity.Account;
 import com.org.entity.CarRental;
 import com.org.entity.Customer;
@@ -33,45 +32,43 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-
-/**
- * Controller cho màn hình Dashboard của khách hàng.
- * <p>
- * Ngoài việc hiển thị tên / quyền, lớp này còn tự dựng thêm 3 tab chức năng:
- *  - Hồ sơ: xem + chỉnh sửa thông tin cá nhân
- *  - Lịch sử thuê: xem các giao dịch thuê xe
- *  - Đánh giá: xem và gửi đánh giá cho xe đã thuê
- */
 public class DashboardController {
-
   @FXML
   private Label welcomeLabel;
-
   @FXML
   private Label roleLabel;
-
   @FXML
   private Button logoutButton;
-
   @FXML
   private Button manageCustomersButton;
-
   @FXML
   private Button manageCarsButton;
+  @FXML
+  private Button manageRentalsButton;
+  @FXML
+  private VBox adminButtonsPanel;
+  @FXML
+  private VBox customerTabsContainer;
 
+  @FXML
+  private HBox adminLogoutContainer;
+
+  private Button customerLogoutButton;
   private final Account account;
-  private final CustomerService customerService;
-  private final CarRentalService carRentalService;
-  private final ReviewService reviewService;
-
+  private CustomerService customerService;
+  private CarRentalService carRentalService;
+  private ReviewService reviewService;
   private TabPane featureTabPane;
   private ObservableList<CarRental> rentalItems = FXCollections.observableArrayList();
   private ObservableList<Review> reviewItems = FXCollections.observableArrayList();
@@ -83,49 +80,79 @@ public class DashboardController {
   private DatePicker birthdayPicker;
   private TextField identityField;
   private TextField emailField;
-
   private Customer cachedCustomer;
-
+  private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+  private static final DecimalFormat PRICE_FORMATTER;
+  static {
+    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ITALIAN);
+    symbols.setGroupingSeparator('.');
+    PRICE_FORMATTER = new DecimalFormat("#,###", symbols);
+  }
   public DashboardController(Account account) {
     this.account = account;
-    // Khởi tạo các repository triển khai bằng Hibernate
-    CustomerRepository customerRepository = new HibernateCustomerRepository();
-    CarRentalRepository carRentalRepository = new HibernateCarRentalRepository();
-    ReviewRepository reviewRepository = new HibernateReviewRepository();
-
-    this.customerService = new CustomerService(customerRepository);
-    this.carRentalService = new CarRentalService(carRentalRepository);
-    this.reviewService = new ReviewService(reviewRepository, carRentalRepository);
+    boolean isAdmin = "Admin".equalsIgnoreCase(account.getRole());
+    if (!isAdmin) {
+      CustomerRepository customerRepository = new HibernateCustomerRepository();
+      CarRentalRepository carRentalRepository = new HibernateCarRentalRepository();
+      ReviewRepository reviewRepository = new HibernateReviewRepository();
+      this.customerService = new CustomerService(customerRepository);
+      this.carRentalService = new CarRentalService(carRentalRepository);
+      this.reviewService = new ReviewService(reviewRepository, carRentalRepository);
+    }
   }
-
   @FXML
   void initialize() {
-    // Gán thông tin cơ bản lên label được FXML bind sẵn
-    welcomeLabel.setText("Xin chào, " + account.getAccountName());
-    roleLabel.setText("Quyền hạn: " + account.getRole());
+    boolean isAdmin = "Admin".equalsIgnoreCase(account.getRole());
+    if (isAdmin) {
+      welcomeLabel.setText("Trang quản lý cho thuê xe");
+    } else {
+      welcomeLabel.setText("Xin chào, " + account.getAccountName());
+    }
+    roleLabel.setVisible(false);
+    roleLabel.setManaged(false);
     logoutButton.setOnAction(event -> SceneNavigator.showLogin());
-
-    // Nạp dữ liệu khách hàng ngay khi đăng nhập để các tab khác có thể sử dụng lại.
-    customerService.findByAccount(account)
-        .ifPresentOrElse(customer -> {
-              this.cachedCustomer = customer;
-              setupFeatureTabs();
-              refreshAllData();
-            },
-            () -> System.out.println("Không tìm thấy khách hàng cho tài khoản hiện tại"));
+    if (isAdmin) {
+      if (adminButtonsPanel != null) {
+        adminButtonsPanel.setVisible(true);
+        adminButtonsPanel.setManaged(true);
+      }
+      if (adminLogoutContainer != null) {
+        adminLogoutContainer.setVisible(true);
+        adminLogoutContainer.setManaged(true);
+      }
+      if (customerTabsContainer != null) {
+        customerTabsContainer.setVisible(false);
+        customerTabsContainer.setManaged(false);
+      }
+      manageCustomersButton.setOnAction(event -> SceneNavigator.showCustomerManagement(account));
+      manageCarsButton.setOnAction(event -> SceneNavigator.showCarManagement(account));
+      manageRentalsButton.setOnAction(event -> SceneNavigator.showCarRentalManagement(account));
+    } else {
+      if (adminButtonsPanel != null) {
+        adminButtonsPanel.setVisible(false);
+        adminButtonsPanel.setManaged(false);
+      }
+      if (adminLogoutContainer != null) {
+        adminLogoutContainer.setVisible(false);
+        adminLogoutContainer.setManaged(false);
+      }
+      if (customerTabsContainer != null) {
+        customerTabsContainer.setVisible(true);
+        customerTabsContainer.setManaged(true);
+      }
+      customerService.findByAccount(account)
+          .ifPresentOrElse(customer -> {
+                this.cachedCustomer = customer;
+                setupFeatureTabs();
+                refreshAllData();
+              },
+              () -> System.out.println("Không tìm thấy khách hàng cho tài khoản hiện tại"));
+    }
   }
-
-  /**
-   * Trả về thông tin hồ sơ hiện tại (dành cho tab "Hồ sơ").
-   */
   public Customer getCurrentCustomerProfile() {
     ensureCustomerLoaded();
     return cachedCustomer;
   }
-
-  /**
-   * Cập nhật thông tin hồ sơ dựa trên dữ liệu người dùng nhập.
-   */
   public Customer updateProfile(String fullName,
                                 String mobile,
                                 LocalDate birthday,
@@ -140,74 +167,73 @@ public class DashboardController {
     cachedCustomer = customerService.saveProfile(cachedCustomer);
     return cachedCustomer;
   }
-
-  /**
-   * Lấy danh sách lịch sử thuê để hiển thị trong bảng ở tab "Lịch sử thuê".
-   */
   public List<CarRental> getRentalHistory() {
     ensureCustomerLoaded();
     return carRentalService.findRentals(cachedCustomer);
   }
-
-  /**
-   * Lấy danh sách đánh giá mà khách đã gửi trước đó.
-   */
   public List<Review> getReviews() {
     ensureCustomerLoaded();
     return reviewService.findReviews(cachedCustomer);
   }
-
-  /**
-   * Gửi đánh giá mới cho xe đã thuê; controller UI có thể gọi phương thức này khi người dùng nhấn nút "Gửi".
-   */
   public Review submitReview(Long carId, int star, String comment) {
     ensureCustomerLoaded();
     return reviewService.submitReview(cachedCustomer, carId, star, comment);
   }
-
   private void ensureCustomerLoaded() {
     if (cachedCustomer == null) {
       throw new IllegalStateException("Chưa có thông tin khách hàng. Vui lòng thử đăng nhập lại.");
     }
   }
-
   private void setupFeatureTabs() {
     if (featureTabPane != null) {
       return;
     }
-    // Chỉ tạo TabPane 1 lần, tránh tạo lại khi JavaFX gọi initialize nhiều lần
+    if (adminButtonsPanel != null) {
+      adminButtonsPanel.setVisible(false);
+      adminButtonsPanel.setManaged(false);
+    }
     featureTabPane = new TabPane();
     featureTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
+    VBox.setVgrow(featureTabPane, Priority.ALWAYS);
     featureTabPane.getTabs().add(createProfileTab());
     featureTabPane.getTabs().add(createHistoryTab());
     featureTabPane.getTabs().add(createReviewTab());
-
-    VBox root = (VBox) welcomeLabel.getParent();
-    int logoutIndex = root.getChildren().indexOf(logoutButton);
-    root.getChildren().add(logoutIndex, featureTabPane);
-    VBox.setVgrow(featureTabPane, Priority.ALWAYS);
+    if (customerTabsContainer != null) {
+      customerTabsContainer.getChildren().add(featureTabPane);
+      VBox.setVgrow(featureTabPane, Priority.ALWAYS);
+      
+      customerLogoutButton = new Button("Đăng xuất");
+      customerLogoutButton.getStyleClass().add("logout-button");
+      customerLogoutButton.setPrefWidth(150);
+      customerLogoutButton.setMinWidth(100);
+      customerLogoutButton.setOnAction(event -> SceneNavigator.showLogin());
+      
+      HBox logoutContainer = new HBox();
+      logoutContainer.setAlignment(javafx.geometry.Pos.CENTER);
+      HBox.setHgrow(logoutContainer, Priority.ALWAYS);
+      logoutContainer.getChildren().add(customerLogoutButton);
+      
+      customerTabsContainer.getChildren().add(logoutContainer);
+    }
   }
-
   private Tab createProfileTab() {
     Tab tab = new Tab("Hồ sơ");
+    VBox container = new VBox(10);
+    container.setPadding(new Insets(20));
     GridPane form = new GridPane();
-    form.setHgap(10);
-    form.setVgap(10);
-    form.setPadding(new Insets(10));
-
+    form.setHgap(15);
+    form.setVgap(15);
+    form.setPadding(new Insets(20));
     nameField = new TextField();
     mobileField = new TextField();
     birthdayPicker = new DatePicker();
     identityField = new TextField();
     emailField = new TextField();
-
     form.addRow(0, new Label("Họ tên:"), nameField);
     form.addRow(1, new Label("Số điện thoại:"), mobileField);
     form.addRow(2, new Label("Ngày sinh:"), birthdayPicker);
     form.addRow(3, new Label("CMND/CCCD:"), identityField);
     form.addRow(4, new Label("Email:"), emailField);
-
     Button saveButton = new Button("Lưu thay đổi");
     saveButton.setOnAction(event -> {
       try {
@@ -223,16 +249,14 @@ public class DashboardController {
       }
     });
     form.add(saveButton, 1, 5);
-
-    tab.setContent(form);
+    container.getChildren().add(form);
+    tab.setContent(container);
     return tab;
   }
-
   private Tab createHistoryTab() {
     Tab tab = new Tab("Lịch sử thuê");
     BorderPane pane = new BorderPane();
-    pane.setPadding(new Insets(10));
-
+    pane.setPadding(new Insets(20));
     rentalTable = new TableView<>();
     rentalTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     TableColumn<CarRental, String> carColumn = new TableColumn<>("Xe");
@@ -249,20 +273,19 @@ public class DashboardController {
     TableColumn<CarRental, String> priceColumn = new TableColumn<>("Giá thuê");
     priceColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(
         formatMoney(param.getValue().getRentPrice())));
-
     rentalTable.getColumns().addAll(carColumn, pickupColumn, returnColumn, statusColumn, priceColumn);
     rentalTable.setItems(rentalItems);
-
-    VBox detailBox = new VBox(5);
-    detailBox.setPadding(new Insets(10));
+    VBox detailBox = new VBox(8);
+    detailBox.setPadding(new Insets(15));
+    detailBox.getStyleClass().add("button-panel");
     Label detailTitle = new Label("Chi tiết giao dịch");
+    detailTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
     Label carLabel = new Label();
     Label pickupLabel = new Label();
     Label returnLabel = new Label();
     Label statusLabel = new Label();
     Label priceLabel = new Label();
     detailBox.getChildren().addAll(detailTitle, carLabel, pickupLabel, returnLabel, statusLabel, priceLabel);
-
     rentalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
       if (newSel == null) {
         carLabel.setText("");
@@ -278,19 +301,15 @@ public class DashboardController {
       statusLabel.setText("Trạng thái: " + newSel.getStatus());
       priceLabel.setText("Giá: " + formatMoney(newSel.getRentPrice()));
     });
-
     pane.setCenter(rentalTable);
     pane.setBottom(detailBox);
-
     tab.setContent(pane);
     return tab;
   }
-
   private Tab createReviewTab() {
     Tab tab = new Tab("Đánh giá");
-    VBox container = new VBox(10);
-    container.setPadding(new Insets(10));
-
+    VBox container = new VBox(15);
+    container.setPadding(new Insets(20));
     reviewTable = new TableView<>();
     reviewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     TableColumn<Review, String> carColumn = new TableColumn<>("Xe");
@@ -302,20 +321,16 @@ public class DashboardController {
     commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
     reviewTable.getColumns().addAll(carColumn, starColumn, commentColumn);
     reviewTable.setItems(reviewItems);
-
     reviewRentalSelector = new ComboBox<>();
     reviewRentalSelector.setPromptText("Chọn xe đã thuê");
     reviewRentalSelector.setCellFactory(listView -> new CarRentalListCell());
     reviewRentalSelector.setButtonCell(new CarRentalListCell());
-
     ComboBox<Integer> starSelector = new ComboBox<>();
     starSelector.getItems().addAll(1, 2, 3, 4, 5);
     starSelector.setPromptText("Số sao (1-5)");
-
     TextArea commentArea = new TextArea();
     commentArea.setPromptText("Nhập đánh giá");
     commentArea.setPrefRowCount(4);
-
     Button submitButton = new Button("Gửi đánh giá");
     submitButton.setOnAction(event -> {
       CarRental chosenRental = reviewRentalSelector.getValue();
@@ -340,21 +355,22 @@ public class DashboardController {
         showError("Không thể gửi đánh giá", e.getMessage());
       }
     });
-
-    VBox form = new VBox(8, reviewRentalSelector, starSelector, commentArea, submitButton);
-    container.getChildren().addAll(new Label("Đánh giá đã gửi"), reviewTable, new Label("Gửi đánh giá mới"), form);
+    VBox form = new VBox(10, reviewRentalSelector, starSelector, commentArea, submitButton);
+    form.setPadding(new Insets(10));
+    Label reviewSentLabel = new Label("Đánh giá đã gửi");
+    reviewSentLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+    Label newReviewLabel = new Label("Gửi đánh giá mới");
+    newReviewLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+    container.getChildren().addAll(reviewSentLabel, reviewTable, newReviewLabel, form);
     VBox.setVgrow(reviewTable, Priority.ALWAYS);
-
     tab.setContent(container);
     return tab;
   }
-
   private void refreshAllData() {
     refreshProfileForm();
     refreshRentalData();
     refreshReviewData();
   }
-
   private void refreshProfileForm() {
     if (cachedCustomer == null) {
       return;
@@ -375,46 +391,39 @@ public class DashboardController {
       emailField.setText(cachedCustomer.getEmail());
     }
   }
-
   private void refreshRentalData() {
     rentalItems.setAll(getRentalHistory());
     if (reviewRentalSelector != null) {
       reviewRentalSelector.setItems(FXCollections.observableArrayList(rentalItems));
     }
   }
-
   private void refreshReviewData() {
     reviewItems.setAll(getReviews());
   }
-
   private void showInfo(String message) {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setHeaderText(null);
     alert.setContentText(message);
     alert.showAndWait();
   }
-
   private void showError(String title, String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setHeaderText(title);
     alert.setContentText(message);
     alert.showAndWait();
   }
-
   private String formatDate(LocalDate date) {
     if (date == null) {
       return "";
     }
-    return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    return date.format(DATE_FORMATTER);
   }
-
   private String formatMoney(BigDecimal amount) {
     if (amount == null) {
       return "";
     }
-    return amount.toPlainString();
+    return PRICE_FORMATTER.format(amount);
   }
-
   private static class CarRentalListCell extends javafx.scene.control.ListCell<CarRental> {
     @Override
     protected void updateItem(CarRental item, boolean empty) {
@@ -424,17 +433,6 @@ public class DashboardController {
       } else {
         setText(item.getCar().getCarName() + " (" + item.getPickupDate() + ")");
       }
-    // Chỉ hiển thị các nút quản lý cho Admin
-    boolean isAdmin = "Admin".equalsIgnoreCase(account.getRole());
-    manageCustomersButton.setVisible(isAdmin);
-    manageCustomersButton.setManaged(isAdmin);
-    manageCarsButton.setVisible(isAdmin);
-    manageCarsButton.setManaged(isAdmin);
-    
-    if (isAdmin) {
-      manageCustomersButton.setOnAction(event -> SceneNavigator.showCustomerManagement(account));
-      manageCarsButton.setOnAction(event -> SceneNavigator.showCarManagement(account));
     }
   }
 }
-

@@ -6,23 +6,30 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.org.controller.RegisterController"
-      spacing="10"
+      spacing="0"
       alignment="CENTER"
+      fillWidth="true"
       stylesheets="@styles.css">
   <padding>
-    <Insets top="20" right="30" bottom="20" left="30"/>
+    <Insets top="30" right="50" bottom="30" left="50"/>
   </padding>
 
-  <Label text="Đăng ký tài khoản" styleClass="title-label"/>
-  <TextField fx:id="fullNameField" promptText="Họ và tên" maxWidth="320"/>
-  <TextField fx:id="mobileField" promptText="Số điện thoại" maxWidth="320"/>
-  <DatePicker fx:id="birthdayPicker" promptText="Ngày sinh" maxWidth="320"/>
-  <TextField fx:id="identityCardField" promptText="CMND/CCCD" maxWidth="320"/>
-  <TextField fx:id="emailField" promptText="Email" maxWidth="320"/>
-  <TextField fx:id="usernameField" promptText="Tên đăng nhập" maxWidth="280"/>
-  <PasswordField fx:id="passwordField" promptText="Mật khẩu" maxWidth="280"/>
-  <PasswordField fx:id="confirmPasswordField" promptText="Xác nhận mật khẩu" maxWidth="280"/>
-  <Button fx:id="registerButton" text="Đăng ký" onAction="#handleRegister" maxWidth="280"/>
-  <Hyperlink text="Quay lại đăng nhập" onAction="#goBack"/>
+  <!-- Container chính để căn giữa và giới hạn chiều rộng -->
+  <VBox spacing="20" alignment="CENTER" maxWidth="500" VBox.vgrow="ALWAYS" styleClass="main-container">
+    <Label text="Đăng ký tài khoản" styleClass="title-label"/>
+    
+    <VBox spacing="12" alignment="CENTER">
+      <TextField fx:id="fullNameField" promptText="Họ và tên" prefWidth="380" minWidth="300"/>
+      <TextField fx:id="mobileField" promptText="Số điện thoại" prefWidth="380" minWidth="300"/>
+      <DatePicker fx:id="birthdayPicker" promptText="Ngày sinh" prefWidth="380" minWidth="300"/>
+      <TextField fx:id="identityCardField" promptText="CMND/CCCD" prefWidth="380" minWidth="300"/>
+      <TextField fx:id="emailField" promptText="Email" prefWidth="380" minWidth="300"/>
+      <TextField fx:id="usernameField" promptText="Tên đăng nhập" prefWidth="380" minWidth="300"/>
+      <PasswordField fx:id="passwordField" promptText="Mật khẩu" prefWidth="380" minWidth="300"/>
+      <PasswordField fx:id="confirmPasswordField" promptText="Xác nhận mật khẩu" prefWidth="380" minWidth="300"/>
+      <Button fx:id="registerButton" text="Đăng ký" onAction="#handleRegister" prefWidth="380" minWidth="300"/>
+      <Hyperlink text="Quay lại đăng nhập" onAction="#goBack"/>
+    </VBox>
+  </VBox>
 </VBox>
 
