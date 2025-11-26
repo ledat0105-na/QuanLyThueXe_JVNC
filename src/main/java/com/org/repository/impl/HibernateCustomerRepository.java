@@ -9,6 +9,10 @@ import org.hibernate.Transaction;
 
 import java.util.Optional;
 
+/**
+ * Triển khai CustomerRepository bằng Hibernate.
+ * Được dùng ở AuthService (đăng ký) và CustomerService (hồ sơ khách).
+ */
 public class HibernateCustomerRepository implements CustomerRepository {
 
   private final SessionFactory sessionFactory;
@@ -47,6 +51,15 @@ public class HibernateCustomerRepository implements CustomerRepository {
     try (Session session = sessionFactory.openSession()) {
       return session.createQuery("FROM Customer c WHERE c.identityCard = :identity", Customer.class)
           .setParameter("identity", identityCard)
+          .uniqueResultOptional();
+    }
+  }
+
+  @Override
+  public Optional<Customer> findByAccountId(Long accountId) {
+    try (Session session = sessionFactory.openSession()) {
+      return session.createQuery("FROM Customer c WHERE c.account.id = :accountId", Customer.class)
+          .setParameter("accountId", accountId)
           .uniqueResultOptional();
     }
   }
